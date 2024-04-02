@@ -1,1 +1,1 @@
-print("Just a string")
+print("Just a second string")
