@@ -39,9 +39,9 @@ if __name__ == "__main__":
     #basic operations
     A = np.array([2, 3, 4, 5])
     B = np.arange(4)
-    print(A - B)
-    print(A ** 2 <= 16)
-    print(10 * y)
+    #print(A - B)
+    #print(A ** 2 <= 16)
+    #print(10 * y)
     
     #matrix multiplication
     A = np.array([[1, 1],
@@ -49,6 +49,34 @@ if __name__ == "__main__":
     B = np.array([[2, 0],
                  [3, 4]])
     
-    print (A * B)   #Elementwise
-    print(A @ B)    #matrix
-    print(A.dot(B)) #same ^
+    #print (A * B)   #Elementwise
+    #print(A @ B)    #matrix
+    #print(A.dot(B)) #same ^
+    
+    rg = np.random.default_rng(1)
+    a = rg.random((2, 3))
+    #print(a)
+    #print("Max:", a.max(), "Min:", a.min(), "Sum:", a.sum())
+    #print("Sum axis 0:", a.sum(axis=0), "Sum axis 1:", a.sum(axis=1))
+    
+    def f(x, y) -> int:
+        return  10 * x + y
+    
+    b = np.fromfunction(f, (5, 4), dtype = int)
+    #print(b)
+    #print(b[0:5, 1])    #b[:, 1]
+    #print(b[1, :])
+    #print(b[-1])
+    
+    a = np.floor(10 * rg.random((3, 4, 2)))
+    #print(a)    
+    #print(a.ravel())
+    
+    a = np.floor(10 * rg.random((2, 2)))
+    b = np.floor(10 * rg.random((2, 2)))
+    
+    print(a, "\n", b)
+    
+    print(np.vstack((a, b)))
+    print(np.hstack((a, b)))
+    
