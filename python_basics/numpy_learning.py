@@ -1,0 +1,54 @@
+import numpy as np
+from numpy import pi
+
+if __name__ == "__main__":
+    #np array from list
+    some_list: list = [1, 2, 3]
+    some_nparray: np.array = np.array(some_list)
+    #print(some_list)
+    #print(some_nparray, some_nparray.dtype)
+    
+    #2d array
+    some_2dlist: list = [(1.5, 2, 5), (1.2, 3, 12)]
+    some_2dnparray: np.array = np.array(some_2dlist)
+    #print(some_2dlist)
+    #print(some_2dnparray)
+    
+    #zeros, ones and empty arrays
+    #!difference between zeroes and empty: empty just reserve memory for array; zeroes equate all memory to 0
+    np.zeros((3, 4))
+    np.ones((2, 3, 2))
+    np.empty((3, 3))
+    
+    #arange like range, but arraylike
+    #print(np.arange(10, 25, 5))
+    #print(np.arange(10, 26, 5))
+    #print(np.arange(0, 2, 0.1))
+    
+    #linspace from 0 to 10 in 10 pieces
+    #print(np.linspace(0, 10, 10))
+    #print(np.linspace(0, 10, 11))
+    
+    x = np.linspace(0, 2 * pi, 10)
+    y = np.sin(x)
+    #print(y)
+    
+    #reshape
+    #print(x.reshape(10, 10))
+    
+    #basic operations
+    A = np.array([2, 3, 4, 5])
+    B = np.arange(4)
+    print(A - B)
+    print(A ** 2 <= 16)
+    print(10 * y)
+    
+    #matrix multiplication
+    A = np.array([[1, 1],
+                 [0, 1]])
+    B = np.array([[2, 0],
+                 [3, 4]])
+    
+    print (A * B)   #Elementwise
+    print(A @ B)    #matrix
+    print(A.dot(B)) #same ^
