@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import pi
+from numpy import newaxis
 
 if __name__ == "__main__":
     #np array from list
@@ -68,15 +69,18 @@ if __name__ == "__main__":
     #print(b[1, :])
     #print(b[-1])
     
-    a = np.floor(10 * rg.random((3, 4, 2)))
+    #a = np.floor(10 * rg.random((3, 4, 2)))
     #print(a)    
     #print(a.ravel())
     
     a = np.floor(10 * rg.random((2, 2)))
     b = np.floor(10 * rg.random((2, 2)))
     
-    print(a, "\n", b)
+    #print(a, "\n", b)
     
-    print(np.vstack((a, b)))
-    print(np.hstack((a, b)))
+    #print(np.vstack((a, b)))
+    #print(np.hstack((a, b)))
+    #print(np.column_stack((a, b)))
+    #a = np.floor(10 * rg.random((4, 1))) 
+    #print(a[:, newaxis])
     
