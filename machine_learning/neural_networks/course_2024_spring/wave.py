@@ -25,29 +25,26 @@ class NNmodel(nn.Module):
         out = self.lin3(out)
         return out
 
-def func(data: np.array) -> np.array:
-    x = data[:, 0]
-    t = data[:, 1]
-    return (x * t) + np.sin(x + t) - (1 - np.cosh(t)) * np.exp(x)
+def func(x: np.array, t: np.array) -> np.array:
+    return 2 * np.sin(2*np.pi*X) * np.sin(1*np.pi*t)
 
-def heatmap2d(data: np.ndarray, y: np.array):
-    #data[0] = x, data[1] = t
-    plt.scatter(data[:, 1], data[:, 0], c=y, cmap='plasma_r')
+def heatmap2d(x: np.array, t: np.array, y: np.array):
+    plt.scatter(t, x, c=y, cmap='plasma_r')
     plt.colorbar()
 
 if __name__ == "__main__":
     # Data generation
-    size = 51
+    size = 101
     X = torch.linspace(0, 1, size).view(size, 1)
-    t = torch.linspace(0, 1, size).view(size, 1)
-    train_data = np.array([[x0, y0] for x0 in X for y0 in t])
-    y = func(train_data)
+    t = torch.linspace(0, 2, size).view(size, 1)
+    X, t = np.meshgrid(X, t)
+    y = func(X, t)
     
-    size_test = 201
-    test_X = torch.linspace(0, 10, size_test).view(size_test, 1)
-    test_t = torch.linspace(0, 10, size_test).view(size_test, 1)
-    test_data = np.array([[x0, y0] for x0 in test_X for y0 in test_t])
-    test_y = func(test_data)
+    #size_test = 201
+    #test_X = torch.linspace(0, 10, size_test).view(size_test, 1)
+    #test_t = torch.linspace(0, 10, size_test).view(size_test, 1)
+    #test_data = np.array([[x0, y0] for x0 in test_X for y0 in test_t])
+    #test_y = func(test_data)
     
     '''
     #X = torch.tensor(X, dtype = torch.float32)
@@ -117,5 +114,9 @@ if __name__ == "__main__":
     #plt.show()
     fig = plt.figure(figsize=(10,6))
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(train_data[:, 1], train_data[:, 0], y, cmap='viridis')
+    ax.plot_surface(X, t, y, cmap='viridis')
+    ax.set_xlabel('X axis')
+    ax.set_ylabel('time axis')
+    ax.set_zlabel('function axis')
+    
     plt.show()
