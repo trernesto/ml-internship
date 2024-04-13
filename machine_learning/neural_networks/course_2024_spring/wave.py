@@ -27,7 +27,7 @@ class NNmodel(nn.Module):
         return out
 
 def func(x: np.array, t: np.array) -> np.array:
-    return 2 * np.sin(2*np.pi*X) * np.sin(1*np.pi*t)
+    return 2 * np.sin(2*np.pi*x) * np.sin(1*np.pi*t)
 
 def heatmap2d(x: np.array, t: np.array, y: np.array):
     plt.scatter(t, x, c=y, cmap='plasma_r')
@@ -35,20 +35,23 @@ def heatmap2d(x: np.array, t: np.array, y: np.array):
     
 def get_unique_train_points(number_of_points: int, size: int):
     #returns idx
-    size = size**2
-    points = random.sample(range(0, size), number_of_points)
-    x_points = (int)(points/size)
-    t_points = (int)(points%size)
-    return x_points, t_points
+    right_border = size**2
+    points = random.sample(range(0, right_border), number_of_points)
+    x_points = [(int)(point / size) for point in points]
+    t_points = [(int)(point % size) for point in points]
+    return np.array(x_points), np.array(t_points)
     
-
 if __name__ == "__main__":
     # Data generation
+    # Train data
     size = 101
-    X = torch.linspace(0, 1, size).view(size, 1)
-    t = torch.linspace(0, 2, size).view(size, 1)
-    X, t = np.meshgrid(X, t)
-    y = func(X, t)
+    train_X = torch.linspace(0, 1, size).view(size, 1)
+    train_t = torch.linspace(0, 2, size).view(size, 1)
+    train_X, train_t = np.meshgrid(train_X, train_t, sparse=True)
+    train_y = func(train_X, train_t)
+    x_idx, t_idx = get_unique_train_points(4, size)
+    train_X = train_X[:, x_idx]
+    train_t = train_t[t_idx, :]
     
     #size_test = 201
     #test_X = torch.linspace(0, 10, size_test).view(size_test, 1)
