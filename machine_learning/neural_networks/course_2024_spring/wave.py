@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split 
 from torch.utils.data import TensorDataset, DataLoader 
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+import random
 
 class NNmodel(nn.Module):
     def __init__(self, in_layer = 2, hidden_layer = 8, encoder_layer = 8, out_layer = 1) -> None:
@@ -31,21 +32,23 @@ def func(x: np.array, t: np.array) -> np.array:
 def heatmap2d(x: np.array, t: np.array, y: np.array):
     plt.scatter(t, x, c=y, cmap='plasma_r')
     plt.colorbar()
-
-def dstack_product(x, y):
-    return np.dstack(np.meshgrid(x, y)).reshape(-1, 2)
+    
+def get_unique_train_points(number_of_points: int, size: int):
+    #returns idx
+    size = size**2
+    points = random.sample(range(0, size), number_of_points)
+    x_points = (int)(points/size)
+    t_points = (int)(points%size)
+    return x_points, t_points
+    
 
 if __name__ == "__main__":
     # Data generation
     size = 101
     X = torch.linspace(0, 1, size).view(size, 1)
     t = torch.linspace(0, 2, size).view(size, 1)
-    #X, t = np.meshgrid(X, t)
-    train_data = np.dstack(np.meshgrid(X, t)).reshape(-1, 2)
-    X = train_data[:, 0]
-    t = train_data[:, 1]
-    y = func(X, t)[:, None].reshape(size, size)
-    print(y.shape)
+    X, t = np.meshgrid(X, t)
+    y = func(X, t)
     
     #size_test = 201
     #test_X = torch.linspace(0, 10, size_test).view(size_test, 1)
@@ -119,18 +122,18 @@ if __name__ == "__main__":
     #plt.plot(X, y, label = 'train data', c = 'g')
     #plt.legend()
     #plt.show()
-    X = train_data[0:size, 0].reshape(-1, size)
-    t = train_data[0::size, 1].reshape(size, -1)
-    print(X)
-    print(t)
-    fig = plt.figure(figsize=(10,6))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X, t, y, cmap='viridis')
-    ax.set_xlabel('X axis')
-    ax.set_ylabel('time axis')
-    ax.set_zlabel('function axis')
+    #X = train_data[0:size, 0].reshape(-1, size)
+    #t = train_data[0::size, 1].reshape(size, -1)
+    #print(X)
+    #print(t)
+    #fig = plt.figure(figsize=(10,6))
+    #ax = fig.add_subplot(111, projection='3d')
+    #ax.plot_surface(X, t, y, cmap='viridis')
+    #ax.set_xlabel('X axis')
+    #ax.set_ylabel('time axis')
+    #ax.set_zlabel('function axis')
     #plt.scatter(X, t, c=y, cmap='viridis')
     #plt.xlabel('t')
     #plt.ylabel('x')
     #plt.colorbar()
-    plt.show()
+    #plt.show()
