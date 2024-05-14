@@ -65,7 +65,7 @@ def loss_func(model: nn.Module, x: torch.tensor):
 
 if __name__ == "__main__":
     # Data generation
-    size = 201
+    size = 11
     X = torch.linspace(0, 10, size, requires_grad=True).view(size, 1)
     y = func(X)
     
@@ -73,11 +73,7 @@ if __name__ == "__main__":
     test_X = torch.linspace(0, 10, size_test).view(size_test, 1)
     test_y = func(test_X)
     
-    
-    #X = torch.tensor(X, dtype = torch.float32)
-    #y = torch.tensor(y, dtype = torch.float32)
-    
-    train_X, val_X, train_y, val_y = train_test_split(X, y, test_size= 0.2, random_state=42)
+    train_X, val_X, train_y, val_y = train_test_split(X, y, test_size= 0.1, random_state=42)
     
     batch_size = 16
     
@@ -95,34 +91,49 @@ if __name__ == "__main__":
     optim = torch.optim.Adam(model.parameters(), lr=3e-4, weight_decay=1e-5)
     
     # Train cycle
-    num_epochs = 280 #640
+    num_epochs = 3_000 #640
     
     for epoch in range(num_epochs):
         for x_batch, y_batch in train_loader:
-            #y_pred = model(x_batch)
-            
             loss = loss_func(model, x_batch)
-            
             optim.zero_grad()
             loss.backward(retain_graph=True)
             optim.step()
     
+    train_plot_x = np.array([])
+    train_plot_y = np.array([])
+    with torch.no_grad():
+        mse_loss = 0
+        for x_batch, y_batch in train_loader:
+            y_pred = model(x_batch)
+            train_plot_x = np.append(train_plot_x, x_batch)
+            train_plot_y = np.append(train_plot_y, y_pred)
+            mse_loss += mean_squared_error(y_pred, y_batch)
+        print("train loss: {:.7f}".format(mse_loss))
+    
+    '''
     with torch.no_grad():
         mse_loss = 0
         for x_val, y_val in val_loader:
             y_pred = model(x_val)
             mse_loss += mean_squared_error(y_pred, y_val)
-        print("val loss: {:.2f}".format(mse_loss))
+        print("val loss: {:.7f}".format(mse_loss))
+    '''
         
+    test_plot_x = np.array([])
+    test_plot_y = np.array([])
     with torch.no_grad():
         mse_loss = 0
         for x_test, y_test in test_loader:
             y_pred = model(x_test)
-            plt.scatter(x_test, y_pred, c = 'b', linewidths=0.1)
+            test_plot_x = np.append(test_plot_x, x_test)
+            test_plot_y = np.append(test_plot_y, y_pred)
             mse_loss += mean_squared_error(y_pred, y_test)
-        print("test loss: {:.2f}".format(mse_loss))
+        print("test loss: {:.7f}".format(mse_loss))
         
-    plt.plot(test_X, test_y, label = 'data', c = 'r')
-    #plt.plot(X, y, label = 'train data', c = 'g')
+    
+    plt.plot(test_X, test_y, label = 'data', c = 'g')
+    plt.scatter(test_plot_x, test_plot_y, c = 'b', linewidths=0.1, label = 'test')
+    plt.scatter(train_plot_x, train_plot_y, c = 'r', linewidths=0.1, label = 'train')
     plt.legend()
     plt.show()
